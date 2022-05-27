@@ -95,7 +95,12 @@ def Main():
         exit(1)
 
     if status.players.online > 20:
-        logging.info("Not restarting server, server has more then 20 players connected")
+        logging.info("server has more then 20 players connected")
+        if config['dont_restart_if_players']:
+            logging.info("rebooting anyway")
+        else:
+            logging.info("canceling reboot")
+            exit(1)
 
     rcon = wait_for_login()
     ttr = datetime.now() + timedelta(minutes=config['restart_reminder_time'], seconds=5)

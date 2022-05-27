@@ -3,3 +3,4 @@ server_port: 25565
 server_rcon_port: 25566
 server_rcon_password:
 restart_reminder_time: 5
+dont_restart_if_players: true
