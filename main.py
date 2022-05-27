@@ -13,10 +13,7 @@ with open("config.yaml") as file:
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler("debug.log"),
-        logging.StreamHandler()
-    ]
+    handlers=[logging.FileHandler("debug.log"), logging.StreamHandler()],
 )
 
 
@@ -24,10 +21,10 @@ def wait_for_login():
     rrcon = None
 
     def _login():
-        _rcon = RCONClient(config['server_host'], port=config['server_rcon_port'])
+        _rcon = RCONClient(config["server_host"], port=config["server_rcon_port"])
         try:
             logging.info("Trying to rcon into server :)")
-            _rcon.login(config['server_rcon_password'])
+            _rcon.login(config["server_rcon_password"])
             return _rcon, True
         except:
             logging.info("Failed to login to server.. Trying again in 5s")
@@ -50,21 +47,23 @@ def sec_remaining(ttr):
 
 def restart_reminders(rcon, ttr):
     last_reminder = datetime.now()
-    rcon.command(f"ebc &a (!) Restarting {humanize.naturaltime(ttr)}")
+    rcon.command(f"&a[&cAUTO&r&a]&2 (!) Restarting {humanize.naturaltime(ttr)}")
     while sec_remaining(ttr) >= 10:
         if sec_remaining(ttr) >= 60:
             # check if it has been a min
             if (datetime.now() - last_reminder).total_seconds() >= 60:
                 remaining = humanize.naturaltime(ttr)
                 logging.info(f"Sending reminder to server ({remaining})")
-                rcon.command(f"ebc &a (!) Restarting {remaining}")
+                rcon.command(f"&a[&cAUTO&r&a]&2 (!) Restarting {remaining}")
                 last_reminder = datetime.now()
         else:
             time.sleep(1)
-    logging.info("Under 10 sec remaining till shutdown, killing reminder loop and enabling whitelist")
+    logging.info(
+        "Under 10 sec remaining till shutdown, killing reminder loop and enabling whitelist"
+    )
     rcon.command("whitelist on")
     for i in range(10):
-        rcon.command(f"ebc &a (!) Restarting in {10 - i}s")
+        rcon.command(f"&a[&cAUTO&r&a]&2 (!) Restarting in {10 - i}s")
         time.sleep(1)
     return
 
@@ -88,7 +87,7 @@ def wait_for_online():
 def Main():
     logging.info("Starting Main()")
     try:
-        status = get_status()        
+        status = get_status()
         logging.info(f"Server currently online with {status.players.online} players on")
     except:
         logging.info("cannot get server status, not restarting")
@@ -96,18 +95,18 @@ def Main():
 
     if status.players.online > 20:
         logging.info("server has more then 20 players connected")
-        if config['dont_restart_if_players']:
+        if config["dont_restart_if_players"]:
             logging.info("rebooting anyway")
         else:
             logging.info("canceling reboot")
             exit(1)
 
     rcon = wait_for_login()
-    ttr = datetime.now() + timedelta(minutes=config['restart_reminder_time'], seconds=5)
+    ttr = datetime.now() + timedelta(minutes=config["restart_reminder_time"], seconds=5)
     logging.info(f"Restarting in {humanize.naturaltime(ttr)}")
     restart_reminders(rcon, ttr)
     logging.info("Restart in process!")
-    rcon.command("ebc &a (!) Restarting now...")
+    rcon.command("&a[&cAUTO&r&a]&2 (!) Restarting now...")
     rcon.command("ekickall")
     rcon.command("save-all")
     logging.info("Waiting 5s for server to save world")
@@ -123,5 +122,5 @@ def Main():
     rcon.command("whitelist off")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     Main()
