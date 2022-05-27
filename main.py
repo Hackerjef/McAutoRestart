@@ -24,10 +24,10 @@ def wait_for_login():
     rrcon = None
 
     def _login():
-        _rcon = RCONClient(config.server_host, port=config.server_rcon.port)
+        _rcon = RCONClient(config['server_host'], port=config['server_rcon_port'])
         try:
             logging.info("Trying to rcon into server :)")
-            _rcon.login(config.config.server_rcon_password)
+            _rcon.login(config['server_rcon_password'])
             return _rcon, True
         except:
             logging.info("Failed to login to server.. Trying again in 5s")
@@ -70,7 +70,7 @@ def restart_reminders(rcon, ttr):
 
 
 def get_status():
-    server = JavaServer.lookup(f"{config.server_host}:{server_port}")
+    server = JavaServer.lookup(f"{config['server_host']}:{config['server_port']}")
     return server.status()
 
 
@@ -98,7 +98,7 @@ def Main():
         logging.info("Not restarting server, server has more then 20 players connected")
 
     rcon = wait_for_login()
-    ttr = datetime.now() + timedelta(minutes=config.restart_reminder_time, seconds=5)
+    ttr = datetime.now() + timedelta(minutes=config['restart_reminder_time'], seconds=5)
     logging.info(f"Restarting in {humanize.naturaltime(ttr)}")
     restart_reminders(rcon, ttr)
     logging.info("Restart in process!")
