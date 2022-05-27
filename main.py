@@ -47,14 +47,14 @@ def sec_remaining(ttr):
 
 def restart_reminders(rcon, ttr):
     last_reminder = datetime.now()
-    rcon.command(f"&a[&cAUTO&r&a]&2 (!) Restarting {humanize.naturaltime(ttr)}")
+    rcon.command(f"ebc &a[&cAUTO&r&a]&2 (!) Restarting {humanize.naturaltime(ttr)}")
     while sec_remaining(ttr) >= 10:
         if sec_remaining(ttr) >= 60:
             # check if it has been a min
             if (datetime.now() - last_reminder).total_seconds() >= 60:
                 remaining = humanize.naturaltime(ttr)
                 logging.info(f"Sending reminder to server ({remaining})")
-                rcon.command(f"&a[&cAUTO&r&a]&2 (!) Restarting {remaining}")
+                rcon.command(f"ebc &a[&cAUTO&r&a]&2 (!) Restarting {remaining}")
                 last_reminder = datetime.now()
         else:
             time.sleep(1)
@@ -63,7 +63,7 @@ def restart_reminders(rcon, ttr):
     )
     rcon.command("whitelist on")
     for i in range(10):
-        rcon.command(f"&a[&cAUTO&r&a]&2 (!) Restarting in {10 - i}s")
+        rcon.command(f"ebc &a[&cAUTO&r&a]&2 (!) Restarting in {10 - i}s")
         time.sleep(1)
     return
 
@@ -106,7 +106,7 @@ def Main():
     logging.info(f"Restarting in {humanize.naturaltime(ttr)}")
     restart_reminders(rcon, ttr)
     logging.info("Restart in process!")
-    rcon.command("&a[&cAUTO&r&a]&2 (!) Restarting now...")
+    rcon.command("ebc &a[&cAUTO&r&a]&2 (!) Restarting now...")
     rcon.command("ekickall")
     rcon.command("save-all")
     logging.info("Waiting 5s for server to save world")
